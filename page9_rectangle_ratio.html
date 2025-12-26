@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>עמוד 9 - יחסים במלבן</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --blue: #3b82f6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-decoration: underline;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 22px;
+    color: var(--purple);
+    margin-bottom: 25px;
+  }
+
+  .progress-text {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    background: var(--border);
+    height: 10px;
+    border-radius: 5px;
+    margin: 10px 0 25px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    border-radius: 5px;
+    transition: width 0.4s;
+    width: 0%;
+  }
+
+  .rectangle-container {
+    display: flex;
+    justify-content: center;
+    margin: 25px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    border: 2px solid var(--border);
+  }
+
+  .rectangle-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .given-box {
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .exercise {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+  }
+
+  .section-title {
+    font-size: 24px;
+    color: var(--purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .question-item {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    transition: all 0.3s;
+  }
+
+  .question-item.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.08);
+  }
+
+  .question-item.hint-active {
+    border-color: var(--orange);
+  }
+
+  .question-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+  }
+
+  .question-letter {
+    background: var(--purple);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .question-text {
+    font-size: 20px;
+    color: var(--ink);
+    flex-grow: 1;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 15px 0;
+    direction: ltr;
+  }
+
+  .answer-input {
+    width: 60px;
+    padding: 10px;
+    font-size: 22px;
+    text-align: center;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink);
+  }
+
+  .answer-input:focus {
+    outline: none;
+    border-color: var(--cyan);
+  }
+
+  .answer-input.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .answer-input.wrong {
+    border-color: var(--red);
+    animation: shake 0.3s;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .ratio-colon {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .check-btn {
+    padding: 10px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: var(--cyan);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+    margin-right: 10px;
+  }
+
+  .check-btn:hover:not(:disabled) {
+    background: var(--teal);
+    transform: translateY(-2px);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .hint-box {
+    margin-top: 12px;
+    padding: 14px 18px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 16px;
+    color: #92400e;
+    display: none;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.4s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-msg {
+    color: var(--green);
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+  }
+
+  .success-msg.show {
+    display: block;
+    animation: pop 0.4s;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .explanation-box {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #166534;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .explanation-box.show {
+    display: block;
+  }
+
+  .formula {
+    direction: ltr;
+    display: inline-block;
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    background: rgba(124, 58, 237, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Yes/No buttons for parts c and d */
+  .yn-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 15px;
+  }
+
+  .yn-btn {
+    padding: 12px 35px;
+    font-size: 18px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: bold;
+    min-width: 100px;
+  }
+
+  .yn-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+  }
+
+  .yn-btn.yes-btn:hover:not(:disabled) {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.1);
+    color: #166534;
+  }
+
+  .yn-btn.no-btn:hover:not(:disabled) {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.1);
+    color: #991b1b;
+  }
+
+  .yn-btn.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.25);
+    color: #166534;
+  }
+
+  .yn-btn.wrong {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.2);
+    animation: shake 0.4s;
+  }
+
+  .yn-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .final-celebration {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+    border: 3px solid var(--purple);
+    border-radius: 16px;
+    margin-top: 25px;
+  }
+
+  .final-celebration.show {
+    display: block;
+    animation: pop 0.5s;
+  }
+
+  .final-celebration h2 {
+    color: var(--purple);
+    font-size: 32px;
+    margin: 0 0 15px 0;
+  }
+
+  .sub-question {
+    background: rgba(6, 182, 212, 0.05);
+    border: 1px dashed var(--cyan);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+  }
+
+  .sub-question-title {
+    font-size: 16px;
+    color: var(--teal);
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">עמוד 9 - יחסים במלבן</div>
+  <div class="subtitle">מלבן עם צלעות 8 ס"מ ו-3 ס"מ</div>
+
+  <div class="progress-text">התקדמות: <span id="progressCount">0</span> מתוך 4 שאלות</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Rectangle Visual -->
+  <div class="rectangle-container">
+    <svg class="rectangle-svg" width="320" height="160" viewBox="0 0 320 160">
+      <!-- Rectangle -->
+      <rect x="40" y="30" width="240" height="100" fill="rgba(124, 58, 237, 0.1)" stroke="#7c3aed" stroke-width="3"/>
+
+      <!-- Long side label (top) -->
+      <text x="160" y="20" text-anchor="middle" font-size="20" fill="#7c3aed" font-weight="bold">8 ס"מ</text>
+
+      <!-- Short side label (right) -->
+      <text x="295" y="85" text-anchor="start" font-size="20" fill="#06b6d4" font-weight="bold">3 ס"מ</text>
+
+      <!-- Dimension arrows -->
+      <line x1="50" y1="10" x2="270" y2="10" stroke="#7c3aed" stroke-width="2"/>
+      <polygon points="50,10 58,6 58,14" fill="#7c3aed"/>
+      <polygon points="270,10 262,6 262,14" fill="#7c3aed"/>
+
+      <line x1="290" y1="40" x2="290" y2="120" stroke="#06b6d4" stroke-width="2"/>
+      <polygon points="290,40 286,48 294,48" fill="#06b6d4"/>
+      <polygon points="290,120 286,112 294,112" fill="#06b6d4"/>
+    </svg>
+  </div>
+
+  <div class="given-box">
+    <strong>נתון:</strong> מלבן עם צלעות
+    <span style="color: var(--purple);">8 ס"מ</span> (צלע ארוכה) ו-<span style="color: var(--cyan);">3 ס"מ</span> (צלע קצרה)
+  </div>
+
+  <div class="exercise">
+    <div class="section-title">ענו על השאלות הבאות:</div>
+
+    <!-- Question א -->
+    <div class="question-item" id="q-a">
+      <div class="question-header">
+        <div class="question-letter">א</div>
+        <div class="question-text">מהו היחס בין הצלע הארוכה לצלע הקצרה?</div>
+      </div>
+      <div class="input-row">
+        <input type="text" class="answer-input" id="input-a1" maxlength="2" placeholder="?">
+        <span class="ratio-colon">:</span>
+        <input type="text" class="answer-input" id="input-a2" maxlength="2" placeholder="?">
+        <button class="check-btn" onclick="checkA()">בדוק</button>
+      </div>
+      <div class="hint-box" id="hint-a"></div>
+      <div class="success-msg" id="success-a">מצוין!</div>
+      <div class="explanation-box" id="explain-a">
+        היחס בין הצלע הארוכה לצלע הקצרה הוא פשוט <span class="formula">8 : 3</span>
+      </div>
+    </div>
+
+    <!-- Question ב -->
+    <div class="question-item" id="q-b">
+      <div class="question-header">
+        <div class="question-letter">ב</div>
+        <div class="question-text">מהו היחס בין הצלע הארוכה להיקף המלבן?</div>
+      </div>
+      <div class="sub-question">
+        <div class="sub-question-title">קודם כל, חשבו את ההיקף:</div>
+        <div class="input-row">
+          <span style="direction: rtl;">היקף = </span>
+          <input type="text" class="answer-input" id="input-b-perimeter" maxlength="2" placeholder="?">
+          <span>ס"מ</span>
+        </div>
+      </div>
+      <div class="sub-question">
+        <div class="sub-question-title">עכשיו כתבו את היחס המצומצם:</div>
+        <div class="input-row">
+          <input type="text" class="answer-input" id="input-b1" maxlength="2" placeholder="?">
+          <span class="ratio-colon">:</span>
+          <input type="text" class="answer-input" id="input-b2" maxlength="2" placeholder="?">
+          <button class="check-btn" onclick="checkB()">בדוק</button>
+        </div>
+      </div>
+      <div class="hint-box" id="hint-b"></div>
+      <div class="success-msg" id="success-b">מעולה!</div>
+      <div class="explanation-box" id="explain-b">
+        היקף = <span class="formula">2(8+3) = 2×11 = 22</span> ס"מ<br>
+        יחס צלע ארוכה להיקף: <span class="formula">8 : 22</span><br>
+        מצמצמים ב-2: <span class="formula">4 : 11</span>
+      </div>
+    </div>
+
+    <!-- Question ג -->
+    <div class="question-item" id="q-c">
+      <div class="question-header">
+        <div class="question-letter">ג</div>
+        <div class="question-text">אם נכפיל כל צלע ב-3, האם היחס בין הצלעות ישתנה?</div>
+      </div>
+      <div class="sub-question">
+        <div class="sub-question-title">הצלעות החדשות יהיו:</div>
+        <div class="input-row">
+          <span>ארוכה: </span>
+          <input type="text" class="answer-input" id="input-c-long" maxlength="2" placeholder="?" style="width: 50px;">
+          <span style="margin: 0 15px;">קצרה: </span>
+          <input type="text" class="answer-input" id="input-c-short" maxlength="2" placeholder="?" style="width: 50px;">
+        </div>
+      </div>
+      <div class="yn-buttons">
+        <button class="yn-btn yes-btn" onclick="checkC(true)">כן, ישתנה</button>
+        <button class="yn-btn no-btn" onclick="checkC(false)">לא, לא ישתנה</button>
+      </div>
+      <div class="hint-box" id="hint-c"></div>
+      <div class="success-msg" id="success-c">נכון!</div>
+      <div class="explanation-box" id="explain-c">
+        צלעות חדשות: <span class="formula">24</span> ו-<span class="formula">9</span><br>
+        יחס חדש: <span class="formula">24 : 9</span><br>
+        מצמצמים ב-3: <span class="formula">8 : 3</span><br>
+        <strong>היחס לא משתנה!</strong> כפל בקבוע לא משנה את היחס.
+      </div>
+    </div>
+
+    <!-- Question ד -->
+    <div class="question-item" id="q-d">
+      <div class="question-header">
+        <div class="question-letter">ד</div>
+        <div class="question-text">אם נוסיף 3 ס"מ לכל צלע, האם היחס בין הצלעות ישתנה?</div>
+      </div>
+      <div class="sub-question">
+        <div class="sub-question-title">הצלעות החדשות יהיו:</div>
+        <div class="input-row">
+          <span>ארוכה: </span>
+          <input type="text" class="answer-input" id="input-d-long" maxlength="2" placeholder="?" style="width: 50px;">
+          <span style="margin: 0 15px;">קצרה: </span>
+          <input type="text" class="answer-input" id="input-d-short" maxlength="2" placeholder="?" style="width: 50px;">
+        </div>
+      </div>
+      <div class="yn-buttons">
+        <button class="yn-btn yes-btn" onclick="checkD(true)">כן, ישתנה</button>
+        <button class="yn-btn no-btn" onclick="checkD(false)">לא, לא ישתנה</button>
+      </div>
+      <div class="hint-box" id="hint-d"></div>
+      <div class="success-msg" id="success-d">מדויק!</div>
+      <div class="explanation-box" id="explain-d">
+        צלעות חדשות: <span class="formula">11</span> ו-<span class="formula">6</span><br>
+        יחס חדש: <span class="formula">11 : 6</span><br>
+        <strong>היחס השתנה!</strong> חיבור קבוע משנה את היחס (11:6 ≠ 8:3).
+      </div>
+    </div>
+
+  </div>
+
+  <div class="final-celebration" id="finalCelebration">
+    <h2>כל הכבוד! סיימת את כל השאלות!</h2>
+    <div style="font-size: 20px; color: #166534;">
+      הבנת את ההבדל בין כפל בקבוע לחיבור קבוע ליחסים!
+    </div>
+  </div>
+
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+let attemptsA = 0, attemptsB = 0, attemptsC = 0, attemptsD = 0;
+let completed = { a: false, b: false, c: false, d: false };
+const totalQuestions = 4;
+
+const hintsA = [
+  'רמז: פשוט כתבו את הצלע הארוכה והקצרה',
+  'רמז: הצלע הארוכה היא 8, הקצרה היא 3',
+  'רמז: התשובה היא 8 : 3'
+];
+
+const hintsB = [
+  'רמז: היקף מלבן = 2 × (אורך + רוחב)',
+  'רמז: היקף = 2 × (8 + 3) = 2 × 11 = 22',
+  'רמז: יחס 8:22, מצמצמים ב-2 מקבלים 4:11'
+];
+
+const hintsC = [
+  'רמז: חשבו את הצלעות החדשות (8×3 ו-3×3)',
+  'רמז: צלעות חדשות: 24 ו-9. מה היחס 24:9 מצומצם?',
+  'רמז: 24:9 = 8:3 (מצמצמים ב-3). זה אותו יחס!'
+];
+
+const hintsD = [
+  'רמז: חשבו את הצלעות החדשות (8+3 ו-3+3)',
+  'רמז: צלעות חדשות: 11 ו-6. השוו ל-8:3',
+  'רמז: 11:6 ≠ 8:3, לכן היחס השתנה!'
+];
+
+function checkA() {
+  if (completed.a) return;
+  attemptsA++;
+
+  const v1 = parseInt(document.getElementById('input-a1').value.trim());
+  const v2 = parseInt(document.getElementById('input-a2').value.trim());
+  const item = document.getElementById('q-a');
+  const hintBox = document.getElementById('hint-a');
+
+  if (v1 === 8 && v2 === 3) {
+    markCorrect('a', item);
+  } else {
+    showHint(hintBox, hintsA, attemptsA);
+    shakeInputs(['input-a1', 'input-a2']);
+    item.classList.add('hint-active');
+  }
+}
+
+function checkB() {
+  if (completed.b) return;
+  attemptsB++;
+
+  const perimeter = parseInt(document.getElementById('input-b-perimeter').value.trim());
+  const v1 = parseInt(document.getElementById('input-b1').value.trim());
+  const v2 = parseInt(document.getElementById('input-b2').value.trim());
+  const item = document.getElementById('q-b');
+  const hintBox = document.getElementById('hint-b');
+
+  // Accept 4:11 as correct (simplified) or 8:22
+  if ((v1 === 4 && v2 === 11) || (v1 === 8 && v2 === 22)) {
+    markCorrect('b', item);
+  } else {
+    showHint(hintBox, hintsB, attemptsB);
+    shakeInputs(['input-b-perimeter', 'input-b1', 'input-b2']);
+    item.classList.add('hint-active');
+  }
+}
+
+function checkC(answer) {
+  if (completed.c) return;
+  attemptsC++;
+
+  const item = document.getElementById('q-c');
+  const hintBox = document.getElementById('hint-c');
+  const btns = item.querySelectorAll('.yn-btn');
+
+  // Correct answer is false (ratio does NOT change)
+  if (answer === false) {
+    btns[1].classList.add('correct');
+    btns.forEach(b => b.disabled = true);
+    markCorrect('c', item);
+  } else {
+    btns[0].classList.add('wrong');
+    setTimeout(() => btns[0].classList.remove('wrong'), 400);
+    showHint(hintBox, hintsC, attemptsC);
+    item.classList.add('hint-active');
+  }
+}
+
+function checkD(answer) {
+  if (completed.d) return;
+  attemptsD++;
+
+  const item = document.getElementById('q-d');
+  const hintBox = document.getElementById('hint-d');
+  const btns = item.querySelectorAll('.yn-btn');
+
+  // Correct answer is true (ratio DOES change)
+  if (answer === true) {
+    btns[0].classList.add('correct');
+    btns.forEach(b => b.disabled = true);
+    markCorrect('d', item);
+  } else {
+    btns[1].classList.add('wrong');
+    setTimeout(() => btns[1].classList.remove('wrong'), 400);
+    showHint(hintBox, hintsD, attemptsD);
+    item.classList.add('hint-active');
+  }
+}
+
+function markCorrect(id, item) {
+  item.classList.add('correct');
+  item.classList.remove('hint-active');
+  document.getElementById('hint-' + id).classList.remove('show');
+  document.getElementById('success-' + id).classList.add('show');
+  document.getElementById('explain-' + id).classList.add('show');
+
+  // Mark inputs as correct
+  const inputs = item.querySelectorAll('.answer-input');
+  inputs.forEach(inp => {
+    inp.classList.add('correct');
+    inp.disabled = true;
+  });
+
+  // Disable button if exists
+  const btn = item.querySelector('.check-btn');
+  if (btn) btn.disabled = true;
+
+  completed[id] = true;
+  updateProgress();
+  createConfetti();
+}
+
+function showHint(hintBox, hints, attempts) {
+  const idx = Math.min(attempts - 1, hints.length - 1);
+  hintBox.innerHTML = '💡 ' + hints[idx];
+  hintBox.classList.add('show');
+}
+
+function shakeInputs(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.add('wrong');
+      setTimeout(() => el.classList.remove('wrong'), 300);
+    }
+  });
+}
+
+function updateProgress() {
+  const count = Object.values(completed).filter(v => v).length;
+  document.getElementById('progressCount').textContent = count;
+  document.getElementById('progressFill').style.width = (count / totalQuestions * 100) + '%';
+
+  if (count === totalQuestions) {
+    setTimeout(() => {
+      document.getElementById('finalCelebration').classList.add('show');
+      bigConfetti();
+    }, 500);
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#7c3aed', '#06b6d4', '#22c55e', '#f59e0b', '#f472b6', '#a78bfa'];
+  for (let i = 0; i < 30; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.4 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3000);
+}
+
+function bigConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#7c3aed', '#06b6d4', '#22c55e', '#f59e0b', '#f472b6', '#a78bfa', '#fde047'];
+  for (let i = 0; i < 80; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 1 + 's';
+    d.style.width = (8 + Math.random() * 8) + 'px';
+    d.style.height = (8 + Math.random() * 8) + 'px';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 4000);
+}
+
+// Enter key support
+document.querySelectorAll('.answer-input').forEach(input => {
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      const id = input.id;
+      if (id.startsWith('input-a')) checkA();
+      else if (id.startsWith('input-b')) checkB();
+    }
+  });
+});
+</script>
+
+</body>
+</html>

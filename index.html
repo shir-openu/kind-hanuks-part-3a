@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>עבודת חנוכה - מתמטיקה ח' (חלק ג)</title>
+    <style>
+        :root {
+            --bg: #0f0f23;
+            --panel: #1a1a2e;
+            --border: #2d2d44;
+            --text: #e0e0e0;
+            --purple: #a78bfa;
+            --blue: #60a5fa;
+            --green: #4ade80;
+            --yellow: #fbbf24;
+            --pink: #f472b6;
+            --orange: #fb923c;
+            --cyan: #22d3ee;
+            --red: #f87171;
+            --lime: #a3e635;
+            --teal: #2dd4bf;
+            --indigo: #818cf8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle { color: #888; font-size: 1.1rem; margin-bottom: 50px; }
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--cyan);
+            margin: 30px 0 20px;
+            text-align: center;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .card {
+            background: var(--panel);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(167, 139, 250, 0.25);
+        }
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+        .card:nth-child(1) .card-icon { background: linear-gradient(135deg, var(--purple), #7c3aed); }
+        .card:nth-child(2) .card-icon { background: linear-gradient(135deg, var(--cyan), #06b6d4); }
+        .card:nth-child(3) .card-icon { background: linear-gradient(135deg, var(--teal), #14b8a6); }
+        .card:nth-child(4) .card-icon { background: linear-gradient(135deg, var(--orange), #f59e0b); }
+        .card:nth-child(1):hover { border-color: var(--purple); }
+        .card:nth-child(2):hover { border-color: var(--cyan); }
+        .card:nth-child(3):hover { border-color: var(--teal); }
+        .card:nth-child(4):hover { border-color: var(--orange); }
+        .card-title { font-size: 1.3rem; font-weight: 600; color: var(--text); }
+        .card-description { font-size: 0.95rem; color: #888; }
+        .menorah { margin-top: 50px; font-size: 3rem; }
+        .page-badge {
+            background: rgba(124, 58, 237, 0.2);
+            color: var(--purple);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <h1>עבודת חנוכה - מתמטיקה ח' (חלק ג)</h1>
+    <p class="subtitle">עמודים 9-10 - בחרו נושא להתחלה</p>
+
+    <div class="section-title">עמוד 9</div>
+
+    <div class="cards-grid">
+        <a href="page9_rectangle_ratio.html" class="card">
+            <div class="card-icon">מלבן</div>
+            <div class="card-title">יחסים במלבן</div>
+            <div class="card-description">מלבן 8×3 - יחס צלעות והיקף</div>
+            <div class="page-badge">עמוד 9</div>
+        </a>
+        <a href="page9_triangle_congruency.html" class="card">
+            <div class="card-icon">חפיפה</div>
+            <div class="card-title">חפיפת משולשים</div>
+            <div class="card-description">3 איורים - SAS, SSS, ASA</div>
+            <div class="page-badge">עמוד 9</div>
+        </a>
+    </div>
+
+    <div class="menorah">🕎</div>
+</body>
+</html>

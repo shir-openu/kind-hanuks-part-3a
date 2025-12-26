@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>עמוד 9 - חפיפת משולשים</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --panel: #f8f9fa;
+    --border: #dee2e6;
+    --purple: #7c3aed;
+    --green: #22c55e;
+    --orange: #f59e0b;
+    --teal: #14b8a6;
+    --cyan: #06b6d4;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --blue: #3b82f6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    font-size: 20px;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 950px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .title {
+    text-align: center;
+    font-size: 32px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    text-decoration: underline;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 22px;
+    color: var(--purple);
+    margin-bottom: 25px;
+  }
+
+  .progress-text {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+
+  .progress-bar {
+    background: var(--border);
+    height: 10px;
+    border-radius: 5px;
+    margin: 10px 0 25px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    border-radius: 5px;
+    transition: width 0.4s;
+    width: 0%;
+  }
+
+  .given-box {
+    background: rgba(124, 58, 237, 0.1);
+    border: 2px solid var(--purple);
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin: 15px 0;
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .figure-section {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.3s;
+  }
+
+  .figure-section.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.05);
+  }
+
+  .figure-section.hint-active {
+    border-color: var(--orange);
+  }
+
+  .figure-title {
+    font-size: 24px;
+    color: var(--purple);
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .figure-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .figure-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .info-box {
+    background: rgba(6, 182, 212, 0.1);
+    border: 2px solid var(--cyan);
+    border-radius: 10px;
+    padding: 12px 15px;
+    margin: 15px 0;
+    font-size: 16px;
+  }
+
+  .question-text {
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .options-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 600px) {
+    .options-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .option {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+  }
+
+  .option:hover:not(.disabled) {
+    border-color: var(--cyan);
+    background: rgba(6, 182, 212, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .option.selected {
+    border-color: var(--blue);
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  .option.correct {
+    border-color: var(--green);
+    background: rgba(34, 197, 94, 0.15);
+  }
+
+  .option.wrong {
+    border-color: var(--red);
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .option.disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .option-letter {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--purple);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .option.correct .option-letter {
+    background: var(--green);
+  }
+
+  .option.wrong .option-letter {
+    background: var(--red);
+  }
+
+  .check-btn {
+    display: block;
+    margin: 15px auto;
+    padding: 12px 35px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: var(--purple);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+  }
+
+  .check-btn:hover:not(:disabled) {
+    background: #6d28d9;
+    transform: translateY(-2px);
+  }
+
+  .check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .hint-box {
+    margin-top: 12px;
+    padding: 14px 18px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    font-size: 16px;
+    color: #92400e;
+    display: none;
+  }
+
+  .hint-box.show {
+    display: block;
+    animation: fadeIn 0.4s;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-msg {
+    color: var(--green);
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+  }
+
+  .success-msg.show {
+    display: block;
+    animation: pop 0.4s;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .explanation-box {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid var(--green);
+    border-radius: 8px;
+    padding: 15px 18px;
+    font-size: 16px;
+    color: #166534;
+    margin-top: 15px;
+    display: none;
+    line-height: 1.6;
+  }
+
+  .explanation-box.show {
+    display: block;
+  }
+
+  .formula {
+    direction: ltr;
+    display: inline-block;
+    font-family: 'Times New Roman', serif;
+    font-size: 18px;
+    background: rgba(124, 58, 237, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .congruence-symbol {
+    direction: ltr;
+    font-family: 'Times New Roman', serif;
+  }
+
+  .celebration {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    animation: fall 3s ease-out forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .final-celebration {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(6, 182, 212, 0.15));
+    border: 3px solid var(--purple);
+    border-radius: 16px;
+    margin-top: 25px;
+  }
+
+  .final-celebration.show {
+    display: block;
+    animation: pop 0.5s;
+  }
+
+  .final-celebration h2 {
+    color: var(--purple);
+    font-size: 32px;
+    margin: 0 0 15px 0;
+  }
+
+  .theorems-summary {
+    background: rgba(124, 58, 237, 0.08);
+    border: 2px solid var(--purple);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .theorems-summary h3 {
+    color: var(--purple);
+    margin-bottom: 15px;
+  }
+
+  .theorem-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  .theorem-badge {
+    background: var(--purple);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="title">עמוד 9 - חפיפת משולשים</div>
+  <div class="subtitle">קבעו האם המשולשים חופפים ובאיזה משפט</div>
+
+  <div class="progress-text">התקדמות: <span id="progressCount">0</span> מתוך 3 איורים</div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <div class="given-box">
+    <strong>משפטי חפיפה:</strong><br>
+    <span class="formula">SAS</span> - צלע, זווית, צלע |
+    <span class="formula">SSS</span> - שלוש צלעות |
+    <span class="formula">ASA</span> - זווית, צלע, זווית |
+    <span class="formula">AAS</span> - זווית, זווית, צלע
+  </div>
+
+  <!-- Figure 1 - SAS: ΔACB ≅ ΔDFE -->
+  <div class="figure-section" id="figure-1">
+    <div class="figure-title">איור 1</div>
+    <div class="figure-container">
+      <svg class="figure-svg" width="420" height="220" viewBox="0 0 420 220">
+        <!-- Triangle ACB (left) -->
+        <polygon points="30,180 130,40 180,180" fill="rgba(124, 58, 237, 0.1)" stroke="#7c3aed" stroke-width="2.5"/>
+        <!-- Triangle DFE (right) -->
+        <polygon points="240,180 340,40 390,180" fill="rgba(6, 182, 212, 0.1)" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Labels for first triangle ACB -->
+        <text x="15" y="195" font-size="20" fill="#7c3aed" font-weight="bold">A</text>
+        <text x="125" y="30" font-size="20" fill="#7c3aed" font-weight="bold">C</text>
+        <text x="185" y="195" font-size="20" fill="#7c3aed" font-weight="bold">B</text>
+
+        <!-- Labels for second triangle DFE -->
+        <text x="225" y="195" font-size="20" fill="#06b6d4" font-weight="bold">D</text>
+        <text x="335" y="30" font-size="20" fill="#06b6d4" font-weight="bold">F</text>
+        <text x="395" y="195" font-size="20" fill="#06b6d4" font-weight="bold">E</text>
+
+        <!-- Double tick marks for AC = FD -->
+        <line x1="75" y1="105" x2="82" y2="115" stroke="#7c3aed" stroke-width="2.5"/>
+        <line x1="82" y1="105" x2="89" y2="115" stroke="#7c3aed" stroke-width="2.5"/>
+
+        <line x1="285" y1="105" x2="292" y2="115" stroke="#06b6d4" stroke-width="2.5"/>
+        <line x1="292" y1="105" x2="299" y2="115" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Single tick marks for CB = FE -->
+        <line x1="155" y1="105" x2="162" y2="115" stroke="#7c3aed" stroke-width="2.5"/>
+        <line x1="365" y1="105" x2="372" y2="115" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Angle arcs at C and F -->
+        <path d="M 118,55 Q 135,70 145,55" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <path d="M 328,55 Q 345,70 355,55" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <div class="info-box">
+      <strong>נתון:</strong>
+      <span class="formula">AC = FD</span> (סימון כפול),
+      <span class="formula">CB = FE</span> (סימון יחיד),
+      <span class="formula">∠C = ∠F</span> (זוויות מסומנות)
+    </div>
+
+    <div class="question-text">באיזה משפט המשולשים חופפים?</div>
+
+    <div class="options-container" id="options-1">
+      <div class="option" onclick="selectOption(1, 0)">
+        <span class="option-letter">א</span>
+        <span>SSS - שלוש צלעות</span>
+      </div>
+      <div class="option" onclick="selectOption(1, 1)">
+        <span class="option-letter">ב</span>
+        <span>SAS - צלע, זווית, צלע</span>
+      </div>
+      <div class="option" onclick="selectOption(1, 2)">
+        <span class="option-letter">ג</span>
+        <span>ASA - זווית, צלע, זווית</span>
+      </div>
+      <div class="option" onclick="selectOption(1, 3)">
+        <span class="option-letter">ד</span>
+        <span>לא חופפים</span>
+      </div>
+    </div>
+
+    <button class="check-btn" id="btn-1" onclick="checkAnswer(1)">בדוק</button>
+    <div class="hint-box" id="hint-1"></div>
+    <div class="success-msg" id="success-1">מצוין!</div>
+    <div class="explanation-box" id="explain-1">
+      הזווית <span class="formula">∠C = ∠F</span> נמצאת <strong>בין</strong> שתי הצלעות המסומנות (AC ו-CB).<br>
+      לכן: <span class="formula congruence-symbol">ΔACB ≅ ΔDFE</span> לפי משפט <strong>SAS</strong> (צלע-זווית-צלע)
+    </div>
+  </div>
+
+  <!-- Figure 2 - SSS: ΔABC ≅ ΔDCB -->
+  <div class="figure-section" id="figure-2">
+    <div class="figure-title">איור 2</div>
+    <div class="figure-container">
+      <svg class="figure-svg" width="420" height="220" viewBox="0 0 420 220">
+        <!-- Quadrilateral ABCD -->
+        <polygon points="60,50 360,50 310,180 110,180" fill="rgba(200, 200, 200, 0.1)" stroke="#ccc" stroke-width="1"/>
+
+        <!-- Triangle ABC (purple) - vertices A, B, C -->
+        <polygon points="60,50 360,50 310,180" fill="rgba(124, 58, 237, 0.15)" stroke="#7c3aed" stroke-width="2.5"/>
+
+        <!-- Triangle DCB (cyan) - vertices D, C, B -->
+        <polygon points="110,180 310,180 360,50" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Diagonal BC (shared side) - dashed orange -->
+        <line x1="360" y1="50" x2="310" y2="180" stroke="#f59e0b" stroke-width="3" stroke-dasharray="8,4"/>
+
+        <!-- Labels -->
+        <text x="40" y="45" font-size="20" fill="#7c3aed" font-weight="bold">A</text>
+        <text x="365" y="45" font-size="20" fill="#333" font-weight="bold">B</text>
+        <text x="315" y="200" font-size="20" fill="#333" font-weight="bold">C</text>
+        <text x="90" y="200" font-size="20" fill="#06b6d4" font-weight="bold">D</text>
+
+        <!-- Length labels -->
+        <text x="195" y="40" font-size="16" fill="#7c3aed" font-weight="bold">AB = 5</text>
+        <text x="195" y="200" font-size="16" fill="#06b6d4" font-weight="bold">CD = 5</text>
+        <text x="25" y="125" font-size="16" fill="#7c3aed" font-weight="bold">AC = 6</text>
+        <text x="340" y="125" font-size="16" fill="#06b6d4" font-weight="bold">BD = 6</text>
+        <text x="350" y="130" font-size="14" fill="#f59e0b" font-weight="bold">BC</text>
+      </svg>
+    </div>
+
+    <div class="info-box">
+      <strong>נתון:</strong>
+      <span class="formula">AC = BD = 6</span>,
+      <span class="formula">AB = CD = 5</span>,
+      ו-<span class="formula">BC</span> משותף לשני המשולשים<br>
+      <strong>המשולשים:</strong> <span class="formula">ΔABC</span> (סגול) ו-<span class="formula">ΔDCB</span> (תכלת)
+    </div>
+
+    <div class="question-text">באיזה משפט המשולשים חופפים?</div>
+
+    <div class="options-container" id="options-2">
+      <div class="option" onclick="selectOption(2, 0)">
+        <span class="option-letter">א</span>
+        <span>SSS - שלוש צלעות</span>
+      </div>
+      <div class="option" onclick="selectOption(2, 1)">
+        <span class="option-letter">ב</span>
+        <span>SAS - צלע, זווית, צלע</span>
+      </div>
+      <div class="option" onclick="selectOption(2, 2)">
+        <span class="option-letter">ג</span>
+        <span>ASA - זווית, צלע, זווית</span>
+      </div>
+      <div class="option" onclick="selectOption(2, 3)">
+        <span class="option-letter">ד</span>
+        <span>לא חופפים</span>
+      </div>
+    </div>
+
+    <button class="check-btn" id="btn-2" onclick="checkAnswer(2)">בדוק</button>
+    <div class="hint-box" id="hint-2"></div>
+    <div class="success-msg" id="success-2">נכון מאוד!</div>
+    <div class="explanation-box" id="explain-2">
+      <strong>במשולש ABC:</strong> צלעות AB, BC, AC<br>
+      <strong>במשולש DCB:</strong> צלעות DC, CB, BD<br><br>
+      שלוש זוגות צלעות שוות:<br>
+      • <span class="formula">AB = CD = 5</span><br>
+      • <span class="formula">AC = BD = 6</span><br>
+      • <span class="formula">BC = CB</span> (צלע משותפת)<br><br>
+      לכן: <span class="formula congruence-symbol">ΔABC ≅ ΔDCB</span> לפי משפט <strong>SSS</strong> (צלע-צלע-צלע)
+    </div>
+  </div>
+
+  <!-- Figure 3 - SAS: ΔABC ≅ ΔDEF -->
+  <div class="figure-section" id="figure-3">
+    <div class="figure-title">איור 3</div>
+    <div class="figure-container">
+      <svg class="figure-svg" width="420" height="220" viewBox="0 0 420 220">
+        <!-- Triangle ABC (left) -->
+        <polygon points="30,180 100,40 180,180" fill="rgba(124, 58, 237, 0.1)" stroke="#7c3aed" stroke-width="2.5"/>
+        <!-- Triangle DEF (right) -->
+        <polygon points="240,180 310,40 390,180" fill="rgba(6, 182, 212, 0.1)" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Labels for first triangle ABC -->
+        <text x="15" y="195" font-size="20" fill="#7c3aed" font-weight="bold">A</text>
+        <text x="95" y="30" font-size="20" fill="#7c3aed" font-weight="bold">B</text>
+        <text x="185" y="195" font-size="20" fill="#7c3aed" font-weight="bold">C</text>
+
+        <!-- Labels for second triangle DEF -->
+        <text x="225" y="195" font-size="20" fill="#06b6d4" font-weight="bold">D</text>
+        <text x="305" y="30" font-size="20" fill="#06b6d4" font-weight="bold">E</text>
+        <text x="395" y="195" font-size="20" fill="#06b6d4" font-weight="bold">F</text>
+
+        <!-- Single tick marks for AB = DE -->
+        <line x1="60" y1="105" x2="68" y2="115" stroke="#7c3aed" stroke-width="2.5"/>
+        <line x1="270" y1="105" x2="278" y2="115" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Double tick marks for AC = DF -->
+        <line x1="95" y1="178" x2="100" y2="188" stroke="#7c3aed" stroke-width="2.5"/>
+        <line x1="103" y1="178" x2="108" y2="188" stroke="#7c3aed" stroke-width="2.5"/>
+
+        <line x1="305" y1="178" x2="310" y2="188" stroke="#06b6d4" stroke-width="2.5"/>
+        <line x1="313" y1="178" x2="318" y2="188" stroke="#06b6d4" stroke-width="2.5"/>
+
+        <!-- Angle arcs at B and E -->
+        <path d="M 88,55 Q 105,70 115,50" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <path d="M 298,55 Q 315,70 325,50" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+      </svg>
+    </div>
+
+    <div class="info-box">
+      <strong>נתון:</strong>
+      <span class="formula">AB = DE</span> (סימון יחיד),
+      <span class="formula">AC = DF</span> (סימון כפול),
+      <span class="formula">∠B = ∠E</span> (זוויות מסומנות)
+    </div>
+
+    <div class="question-text">באיזה משפט המשולשים חופפים?</div>
+
+    <div class="options-container" id="options-3">
+      <div class="option" onclick="selectOption(3, 0)">
+        <span class="option-letter">א</span>
+        <span>SSS - שלוש צלעות</span>
+      </div>
+      <div class="option" onclick="selectOption(3, 1)">
+        <span class="option-letter">ב</span>
+        <span>SAS - צלע, זווית, צלע</span>
+      </div>
+      <div class="option" onclick="selectOption(3, 2)">
+        <span class="option-letter">ג</span>
+        <span>ASA - זווית, צלע, זווית</span>
+      </div>
+      <div class="option" onclick="selectOption(3, 3)">
+        <span class="option-letter">ד</span>
+        <span>לא חופפים</span>
+      </div>
+    </div>
+
+    <button class="check-btn" id="btn-3" onclick="checkAnswer(3)">בדוק</button>
+    <div class="hint-box" id="hint-3"></div>
+    <div class="success-msg" id="success-3">מדויק!</div>
+    <div class="explanation-box" id="explain-3">
+      הזווית <span class="formula">∠B = ∠E</span> נמצאת <strong>בין</strong> הצלעות המסומנות.<br>
+      לכן: <span class="formula congruence-symbol">ΔABC ≅ ΔDEF</span> לפי משפט <strong>SAS</strong> (צלע-זווית-צלע)
+    </div>
+  </div>
+
+  <div class="final-celebration" id="finalCelebration">
+    <h2>כל הכבוד! סיימת את כל האיורים!</h2>
+    <div style="font-size: 20px; color: #166534;">
+      הבנת כיצד לזהות משפטי חפיפה במשולשים!
+    </div>
+
+    <div class="theorems-summary">
+      <h3>סיכום משפטי החפיפה:</h3>
+      <div class="theorem-item">
+        <span class="theorem-badge">SAS</span>
+        <span>צלע-זווית-צלע: שתי צלעות שוות והזווית <strong>ביניהן</strong></span>
+      </div>
+      <div class="theorem-item">
+        <span class="theorem-badge">SSS</span>
+        <span>צלע-צלע-צלע: שלוש צלעות שוות</span>
+      </div>
+      <div class="theorem-item">
+        <span class="theorem-badge">ASA</span>
+        <span>זווית-צלע-זווית: שתי זוויות והצלע <strong>ביניהן</strong></span>
+      </div>
+      <div class="theorem-item">
+        <span class="theorem-badge">AAS</span>
+        <span>זווית-זווית-צלע: שתי זוויות וצלע מתאימה</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="celebration" id="celebration"></div>
+
+<script>
+// Correct answers: Figure 1 = SAS (index 1), Figure 2 = SSS (index 0), Figure 3 = SAS (index 1)
+const correctAnswers = {
+  1: 1,  // SAS
+  2: 0,  // SSS
+  3: 1   // SAS
+};
+
+const hints = {
+  1: [
+    'רמז: שימו לב לזווית המסומנת - היכן היא נמצאת ביחס לצלעות?',
+    'רמז: הזווית ∠C נמצאת בין הצלעות AC ו-CB',
+    'רמז: כשיש שתי צלעות שוות והזווית ביניהן - זה SAS!'
+  ],
+  2: [
+    'רמז: זהו את הצלעות של כל משולש וספרו כמה זוגות שווים',
+    'רמז: ΔABC: צלעות AB, BC, AC. ΔDCB: צלעות DC, CB, BD',
+    'רמז: AB=CD=5, AC=BD=6, BC משותף - יש שלוש זוגות צלעות שוות!'
+  ],
+  3: [
+    'רמז: בדקו היכן נמצאת הזווית המסומנת ביחס לצלעות',
+    'רמז: הזווית ∠B נמצאת בין הצלעות AB ו-BC',
+    'רמז: שתי צלעות שוות וזווית ביניהן - זה משפט SAS!'
+  ]
+};
+
+let selected = { 1: null, 2: null, 3: null };
+let attempts = { 1: 0, 2: 0, 3: 0 };
+let completed = { 1: false, 2: false, 3: false };
+const totalFigures = 3;
+
+function selectOption(figNum, optIndex) {
+  if (completed[figNum]) return;
+
+  const options = document.querySelectorAll('#options-' + figNum + ' .option');
+  options.forEach((opt, i) => {
+    opt.classList.remove('selected');
+    if (i === optIndex) opt.classList.add('selected');
+  });
+  selected[figNum] = optIndex;
+}
+
+function checkAnswer(figNum) {
+  if (selected[figNum] === null) {
+    alert('אנא בחרו תשובה');
+    return;
+  }
+  if (completed[figNum]) return;
+
+  attempts[figNum]++;
+
+  const section = document.getElementById('figure-' + figNum);
+  const options = document.querySelectorAll('#options-' + figNum + ' .option');
+  const hintBox = document.getElementById('hint-' + figNum);
+  const btn = document.getElementById('btn-' + figNum);
+
+  if (selected[figNum] === correctAnswers[figNum]) {
+    // Correct
+    options.forEach((opt, i) => {
+      opt.classList.add('disabled');
+      if (i === correctAnswers[figNum]) opt.classList.add('correct');
+    });
+    section.classList.add('correct');
+    section.classList.remove('hint-active');
+    hintBox.classList.remove('show');
+    document.getElementById('success-' + figNum).classList.add('show');
+    document.getElementById('explain-' + figNum).classList.add('show');
+    btn.disabled = true;
+    completed[figNum] = true;
+    updateProgress();
+    createConfetti();
+  } else {
+    // Wrong
+    options[selected[figNum]].classList.add('wrong');
+    section.classList.add('hint-active');
+    setTimeout(() => options[selected[figNum]].classList.remove('wrong'), 400);
+
+    const hintIndex = Math.min(attempts[figNum] - 1, hints[figNum].length - 1);
+    hintBox.innerHTML = '💡 ' + hints[figNum][hintIndex];
+    hintBox.classList.add('show');
+  }
+}
+
+function updateProgress() {
+  const count = Object.values(completed).filter(v => v).length;
+  document.getElementById('progressCount').textContent = count;
+  document.getElementById('progressFill').style.width = (count / totalFigures * 100) + '%';
+
+  if (count === totalFigures) {
+    setTimeout(() => {
+      document.getElementById('finalCelebration').classList.add('show');
+      bigConfetti();
+    }, 500);
+  }
+}
+
+function createConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#7c3aed', '#06b6d4', '#22c55e', '#f59e0b', '#f472b6', '#a78bfa'];
+  for (let i = 0; i < 30; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 0.4 + 's';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 3000);
+}
+
+function bigConfetti() {
+  const c = document.getElementById('celebration');
+  const colors = ['#7c3aed', '#06b6d4', '#22c55e', '#f59e0b', '#f472b6', '#a78bfa', '#fde047'];
+  for (let i = 0; i < 80; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.background = colors[Math.floor(Math.random() * colors.length)];
+    d.style.animationDelay = Math.random() * 1 + 's';
+    d.style.width = (8 + Math.random() * 8) + 'px';
+    d.style.height = (8 + Math.random() * 8) + 'px';
+    c.appendChild(d);
+  }
+  setTimeout(() => { c.innerHTML = ''; }, 4000);
+}
+</script>
+
+</body>
+</html>
